@@ -133,57 +133,51 @@ def main():
         st.plotly_chart(game.plot_network(), use_container_width=True)
     
     with col2:
-        st.subheader("Operations")
-        
-        # 1. Add Facility Form (Prevents reload while typing)
-        with st.form("add_facility_form"):
-            st.write("**New Facility Location**")
-            c1, c2 = st.columns(2)
-            with c1:
-                x_input = st.number_input("X (Row)", 0, game.grid_size-1, step=1)
-            with c2:
-                y_input = st.number_input("Y (Col)", 0, game.grid_size-1, step=1)
-                
-            submitted = st.form_submit_button("📍 Build Facility")
-            
-            if submitted:
-                success, msg = game.add_facility(x_input, y_input)
-                if success:
-                    st.success(msg)
-                    st.rerun()
-                else:
-                    st.error(msg)
+    st.subheader("Operations")
 
-        # 2. Cost Analysis
-        st.divider()
-       if st.button("💰 Calculate Financials", type="primary", use_container_width=True):
-    f_cost, d_cost = game.calculate_costs()
-    t_cost = f_cost + d_cost
+    # 1. Add Facility Form
+    with st.form("add_facility_form"):
+        st.write("**New Facility Location**")
+        c1, c2 = st.columns(2)
+        with c1:
+            x_input = st.number_input("X (Row)", 0, game.grid_size - 1, step=1)
+        with c2:
+            y_input = st.number_input("Y (Col)", 0, game.grid_size - 1, step=1)
 
-    st.metric("Total Costs", f"${t_cost:,.2f}")
+        submitted = st.form_submit_button("📍 Build Facility")
 
-    c1, c2 = st.columns(2)
-    c1.caption(f"Facilities: ${f_cost:,.0f}")
-    c2.caption(f"Delivery: ${d_cost:,.0f}")
+        if submitted:
+            success, msg = game.add_facility(x_input, y_input)
+            if success:
+                st.success(msg)
+                st.rerun()
+            else:
+                st.error(msg)
 
-st.divider()
-if st.button("🎯 Auto-Find 2 Facilities (~$10K)", use_container_width=True):
-    pair, cost = game.find_best_two_facilities()
-    st.success(f"Facility 1: {pair[0]} | Facility 2: {pair[1]}")
-    st.metric("Optimized Total Cost", f"${cost:,.2f}")
+    st.divider()
 
-c1, c2 = st.columns(2)
-            c1.caption(f"Facilities: ${f_cost:,.0f}")
-            c2.caption(f"Delivery: ${d_cost:,.0f}")
+    # 2. Cost Analysis
+    if st.button("💰 Calculate Financials", type="primary", use_container_width=True):
+        f_cost, d_cost = game.calculate_costs()
+        t_cost = f_cost + d_cost
 
-        # 3. Reset
-        st.divider()
-        if st.button("🔄 Reset Simulation", use_container_width=True):
-            st.session_state.facilities = []
-            st.session_state.demand_map = np.random.randint(10, 50, (game.grid_size, game.grid_size))
-            st.rerun()
+        st.metric("Total Costs", f"${t_cost:,.2f}")
+        c1, c2 = st.columns(2)
+        c1.caption(f"Facilities: ${f_cost:,.0f}")
+        c2.caption(f"Delivery: ${d_cost:,.0f}")
 
-if __name__ == "__main__":
-    main()
+    st.divider()
 
-Answer ??
+    # 3. Auto Optimization
+    if st.button("🎯 Auto-Find 2 Facilities (~$10K)", use_container_width=True):
+        pair, cost = game.find_best_two_facilities()
+        st.success(f"Facility 1: {pair[0]} | Facility 2: {pair[1]}")
+        st.metric("Optimized Total Cost", f"${cost:,.2f}")
+
+    st.divider()
+
+    # 4. Reset
+    if st.button("🔄 Reset Simulation", use_container_width=True):
+        st.session_state.facilities = []
+        st.session_state.demand_map = np.random.randint(10, 50, (game.grid_size, game.grid_size))
+        st.rerun()
