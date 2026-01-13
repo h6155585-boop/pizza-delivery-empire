@@ -133,7 +133,7 @@ def main():
         st.plotly_chart(game.plot_network(), use_container_width=True)
     
     with col2:
-    st.subheader("Operations")
+       st.subheader("Operations")
 
     # 1. Add Facility Form
     with st.form("add_facility_form"):
