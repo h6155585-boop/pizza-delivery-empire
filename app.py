@@ -156,11 +156,16 @@ def main():
 
         # 2. Cost Analysis
         st.divider()
-        if st.button("💰 Calculate Financials", type="primary", use_container_width=True):
-            f_cost, d_cost = game.calculate_costs()
-            t_cost = f_cost + d_cost
-            
-            st.metric("Total Costs", f"${t_cost:,.2f}")
+       if st.button("💰 Calculate Financials", type="primary", use_container_width=True):
+    f_cost, d_cost = game.calculate_costs()
+    t_cost = f_cost + d_cost
+
+    st.metric("Total Costs", f"${t_cost:,.2f}")
+
+    c1, c2 = st.columns(2)
+    c1.caption(f"Facilities: ${f_cost:,.0f}")
+    c2.caption(f"Delivery: ${d_cost:,.0f}")
+
 st.divider()
 if st.button("🎯 Auto-Find 2 Facilities (~$10K)", use_container_width=True):
     pair, cost = game.find_best_two_facilities()
